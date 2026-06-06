@@ -1,0 +1,143 @@
+.cardapio-mf {
+  display: grid;
+  gap: 18px;
+}
+
+.cardapio-mf__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cardapio-mf__header h2,
+.cardapio-mf__header p {
+  margin: 0;
+}
+
+.cardapio-mf__header p {
+  color: #ff5a3d;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cardapio-mf__header h2 {
+  margin-top: 4px;
+  color: #20242a;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  letter-spacing: 0;
+}
+
+.cardapio-mf__header span {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  color: #1b6c55;
+  font-size: 0.88rem;
+  font-weight: 800;
+  background: #e9f8f2;
+  border-radius: 8px;
+}
+
+.cardapio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cardapio-card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dde3ea;
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(37, 45, 58, 0.1);
+}
+
+.cardapio-card__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #e9edf3;
+}
+
+.cardapio-card__content {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.cardapio-card__header {
+  display: grid;
+  gap: 8px;
+}
+
+.cardapio-card__header h3 {
+  margin: 0;
+  color: #20242a;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.cardapio-card__header strong {
+  color: #1fa97a;
+  font-size: 1rem;
+}
+
+.cardapio-card p {
+  min-height: 48px;
+  margin: 0;
+  color: #69717f;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.cardapio-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardapio-card__actions button {
+  min-height: 42px;
+  padding: 0 14px;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  background: #ff5a3d;
+  border: 0;
+  border-radius: 8px;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.cardapio-card__actions button:hover {
+  background: #d93f28;
+  transform: translateY(-1px);
+}
+
+.cardapio-card__actions button:focus-visible {
+  outline: 3px solid rgba(255, 90, 61, 0.28);
+  outline-offset: 2px;
+}
+
+.cardapio-card__actions span {
+  min-width: 76px;
+  color: #1b6c55;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+@media (max-width: 760px) {
+  .cardapio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardapio-mf__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
