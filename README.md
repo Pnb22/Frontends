@@ -1,74 +1,38 @@
 # Food Delivery MFE
 
-Projeto em React com arquitetura de Micro Frontends usando Webpack 5 e Module Federation. A aplicação simula um app de delivery dividido em três partes independentes: um container principal, um micro frontend de cardápio e um micro frontend de pedido.
+Este projeto foi feito para uma atividade de Micro Frontends usando React, Webpack 5 e Module Federation.
 
-## Descrição do Projeto
+A ideia foi separar um app de delivery em tres partes:
 
-O `container` é a aplicação principal. Ele não conhece os detalhes internos dos micros, apenas consome os módulos remotos publicados pelo Webpack Module Federation:
+- `container`: aplicacao principal que junta os micros.
+- `micro-cardapio`: mostra os pratos e envia o item escolhido.
+- `micro-pedido`: recebe os itens e mostra o resumo do pedido.
 
-- `micro-cardapio` expõe `./Cardapio`.
-- `micro-pedido` expõe `./Pedido`.
-
-Cada micro frontend pode ser executado isoladamente durante o desenvolvimento, mas também pode ser carregado pelo container em tempo de execução por meio dos arquivos `remoteEntry.js`.
-
-## Tecnologias
+## Tecnologias usadas
 
 - React
 - JavaScript
 - Webpack 5
-- Webpack Dev Server
 - Module Federation
-- Babel
 - CSS puro
+- Babel
 
-## Estrutura
+## Estrutura do projeto
 
 ```text
 micro-frontends/
-│
-├── container/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── styles/
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── package.json
-│   └── webpack.config.js
-│
-├── micro-cardapio/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   ├── data/
-│   │   ├── pages/
-│   │   ├── styles/
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── package.json
-│   └── webpack.config.js
-│
-└── micro-pedido/
-    ├── public/
-    │   └── index.html
-    ├── src/
-    │   ├── components/
-    │   ├── pages/
-    │   ├── styles/
-    │   ├── App.js
-    │   └── index.js
-    ├── package.json
-    └── webpack.config.js
+|-- container/
+|-- micro-cardapio/
+`-- micro-pedido/
 ```
 
-## Instalação
+Cada app tem sua propria pasta `src`, seus componentes, estilos, `package.json` e `webpack.config.js`.
 
-Abra três terminais, um para cada aplicação.
+## Como rodar
 
-### 1. Micro Cardápio
+Abra tres terminais, um para cada aplicacao.
+
+### 1. Micro Cardapio
 
 ```bash
 cd micro-cardapio
@@ -76,7 +40,7 @@ npm install
 npm start
 ```
 
-Disponível em:
+Roda em:
 
 ```text
 http://localhost:3001
@@ -90,7 +54,7 @@ npm install
 npm start
 ```
 
-Disponível em:
+Roda em:
 
 ```text
 http://localhost:3002
@@ -104,19 +68,17 @@ npm install
 npm start
 ```
 
-Disponível em:
+Roda em:
 
 ```text
 http://localhost:3000
 ```
 
-Execute primeiro os micros `micro-cardapio` e `micro-pedido`, depois execute o `container`.
+Importante: primeiro rode o `micro-cardapio` e o `micro-pedido`. Depois rode o `container`.
 
-## Comunicação entre Micros
+## Como funciona a comunicacao
 
-A comunicação entre os micros acontece por eventos globais do navegador. Essa estratégia mantém os micros desacoplados: o cardápio não importa nenhuma função do pedido, e o pedido não conhece a implementação do cardápio.
-
-Quando o usuário clica em **Adicionar ao Pedido**, o `micro-cardapio` dispara:
+O `micro-cardapio` nao chama diretamente o `micro-pedido`. Ele dispara um evento global no navegador quando o usuario clica em **Adicionar ao Pedido**.
 
 ```javascript
 window.dispatchEvent(
@@ -126,55 +88,39 @@ window.dispatchEvent(
 );
 ```
 
-O `micro-pedido` escuta o mesmo evento:
+O `micro-pedido` fica escutando esse evento:
 
 ```javascript
 window.addEventListener("add-item", (event) => {
-  // Atualiza o pedido com event.detail.
+  // atualiza o pedido
 });
 ```
 
-Assim que o evento é recebido, o pedido atualiza a quantidade do item em tempo real e recalcula o subtotal e o valor total.
+Com isso, quando um prato e adicionado no cardapio, o pedido atualiza sozinho no container.
 
 ## Module Federation
 
-### Container
-
-O container consome os remotes:
+O container consome os dois micros:
 
 ```javascript
-remotes: {
-  cardapio: "cardapio@http://localhost:3001/remoteEntry.js",
-  pedido: "pedido@http://localhost:3002/remoteEntry.js"
-}
+cardapio: "cardapio@http://localhost:3001/remoteEntry.js",
+pedido: "pedido@http://localhost:3002/remoteEntry.js"
 ```
 
-### Micro Cardápio
-
-O cardápio expõe:
+O `micro-cardapio` expoe:
 
 ```javascript
-exposes: {
-  "./Cardapio": "./src/pages/Cardapio"
-}
+"./Cardapio"
 ```
 
-### Micro Pedido
-
-O pedido expõe:
+O `micro-pedido` expoe:
 
 ```javascript
-exposes: {
-  "./Pedido": "./src/pages/Pedido"
-}
+"./Pedido"
 ```
 
-## Resultado Esperado
+## Resultado esperado
 
-Ao abrir `http://localhost:3000` com os três servidores rodando:
+Ao abrir `http://localhost:3000`, o usuario deve ver o cardapio e a area do pedido.
 
-1. O container carrega o Micro Cardápio e o Micro Pedido via Module Federation.
-2. O usuário clica em **Adicionar ao Pedido** em qualquer card de prato.
-3. O Micro Cardápio dispara o evento global `add-item`.
-4. O Micro Pedido recebe o evento e atualiza o pedido em tempo real.
-5. A quantidade, o subtotal e o total do pedido são recalculados automaticamente.
+Quando clicar em **Adicionar ao Pedido**, o item aparece no pedido com quantidade, preco, subtotal e total.
